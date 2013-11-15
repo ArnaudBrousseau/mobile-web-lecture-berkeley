@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple Geolocation API demo</title>
+    </head>
+    <body>
+        <button id="locate">Show My Location</button>
+        <br>
+        <p id="result"></p>
+
+        <script>
+            var locateMe = function() {
+                var result = document.getElementById("result");
+
+                // Make sure geolocation is supported
+                if (!navigator.geolocation){
+                    result.innerHTML = "Whoops. Geolocation is not supported by your browser.";
+                    return;
+                }
+
+                // When geolocation succeeds, this function will be called
+                var success = function(position) {
+                    var latitude  = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    result.innerHTML = 'Latitude is ' + latitude +
+                        '° <br>Longitude is ' + longitude + '°';
+
+                    var img = new Image();
+                    img.src = "http://maps.googleapis.com/maps/api/staticmap?center=" +
+                        latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
+                    img.style.display = "block";
+
+                  result.appendChild(img);
+                };
+
+                // When geolocation fails, this function will be called
+                var error = function() {
+                    result.innerHTML = "Unable to retrieve your location. Bummer!";
+                };
+
+                result.innerHTML = "Locating…";
+                navigator.geolocation.getCurrentPosition(success, error);
+            };
+
+            document.querySelector('#locate').addEventListener('click', locateMe);
+        </script>
+    </body>
+</html>
