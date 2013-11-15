@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Camera API demo</title>
+    </head>
+    <body>
+        <button id="start">Start Capture</button>
+        <button id="stop">Stop Capture</button>
+        <br>
+        <video id="video" autoplay></video>
+
+        <script>
+            // Function that matters for our purposes. Accesses the
+            // getUserMedia API to get a video stream.
+            var startCapture = function(e) {
+                var video = document.querySelector('#video');
+
+                if (navigator.getUserMedia) {
+                    navigator.getUserMedia('video', function(stream) {
+                        video.src = stream;
+                    }, onError);
+
+                } else if (navigator.webkitGetUserMedia) {
+                    navigator.webkitGetUserMedia({video: true}, function(stream) {
+                        video.src = window.URL.createObjectURL(stream);
+                    }, onError);
+
+                } else {
+                    alert('getUserMedia is not supported in your browser. Sorry!');
+                }
+            };
+
+            // Handles errors. Not really important for our purposes.
+            var onError = function() {
+              if (e.code === 1) {
+                alert('User denied access to their camera');
+              } else {
+                alert('Something went wrong: ' + e.message);
+              }
+            };
+
+            // Event Bindings.
+            (function() {
+                var startButton = document.querySelector('#start');
+                var stopButton = document.querySelector('#stop');
+
+                startButton.addEventListener('click', startCapture, false)
+                stopButton.addEventListener('click', function(e) {
+                    video.src="";
+                }, false);
+            })();
+        </script>
+    </body>
+</html>
